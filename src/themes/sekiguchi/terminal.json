@@ -1,0 +1,23 @@
+{
+    "name": "Sekiguchi",
+    "background": "#f5fbf7",
+    "foreground": "#0a1715",
+    "cursorColor": "#0fa58f",
+    "selectionBackground": "#c6f3de",
+    "black": "#f5fbf7",
+    "red": "#bc3847",
+    "green": "#16b67b",
+    "yellow": "#b48722",
+    "blue": "#5aa4ff",
+    "purple": "#a897e8",
+    "cyan": "#0fa58f",
+    "white": "#0a1715",
+    "brightBlack": "#6d8f89",
+    "brightRed": "#d6764b",
+    "brightGreen": "#7de2b6",
+    "brightYellow": "#cfb259",
+    "brightBlue": "#90c2ff",
+    "brightPurple": "#c9bff3",
+    "brightCyan": "#6fd6c7",
+    "brightWhite": "#e5f8ec"
+}

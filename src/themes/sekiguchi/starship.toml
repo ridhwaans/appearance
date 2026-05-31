@@ -1,0 +1,72 @@
+format = """
+[ SEK ](fg:#f5fbf7 bg:#0fa58f bold)\
+[|](fg:#0fa58f bg:#e5f8ec)\
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$cmd_duration\
+$line_break\
+[::](fg:#6d8f89)\
+$character\
+"""
+
+[fill]
+symbol = " "
+
+[directory]
+style = "fg:#0a1715 bg:#e5f8ec bold"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = "git:"
+style = "fg:#0a1715 bg:#c6f3de"
+format = "[|](fg:#e5f8ec bg:#c6f3de)[ $symbol $branch ]($style)"
+
+[git_status]
+style = "fg:#bc3847 bg:#c6f3de bold"
+format = "([ $all_status$ahead_behind ]($style))"
+conflicted = "~${count}"
+ahead = "+${count}"
+behind = "-${count}"
+diverged = "~+${ahead_count}-${behind_count}"
+untracked = "?${count}"
+stashed = "*${count}"
+modified = "!${count}"
+staged = "=${count}"
+renamed = ">${count}"
+deleted = "x${count}"
+
+[cmd_duration]
+min_time = 500
+style = "fg:#50706a"
+format = "[took $duration]($style)"
+
+[character]
+success_symbol = "[>](bold #16b67b)"
+error_symbol = "[x](bold #bc3847)"
+vimcmd_symbol = "[:](bold #5aa4ff)"
+
+[hostname]
+disabled = true
+
+[username]
+disabled = true
+
+[package]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[golang]
+disabled = true
+
+[rust]
+disabled = true

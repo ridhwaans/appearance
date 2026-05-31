@@ -1,0 +1,7 @@
+log/
+.report
+
+.DS_Store
+*Zone.Identifier
+.nvimlog
+src/themes/sekiguchi/sekiguchi.nvim/

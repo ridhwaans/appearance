@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -e
+
+APPEARANCE_DIR=${APPEARANCE_DIR:-$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)}
+export APPEARANCE_DIR
+
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/.local/bin}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+show_help() {
+  cat <<EOF
+Usage: appearance [COMMAND] [OPTIONS]
+
+Commands:
+  font                 Font management (use 'appearance font help' for details)
+  theme                Theme management (use 'appearance theme help' for details)
+  preset               Preset management (use 'appearance preset help' for details)
+  help                 Show this help message
+EOF
+}
+
+if [[ "$#" -lt 1 ]]; then
+  show_help
+  exit 1
+fi
+
+command="$1"
+shift
+
+case "$command" in
+  font)
+    source $APPEARANCE_DIR/src/fonts/set-font.sh
+    $APPEARANCE_DIR/bin/font.sh "$@"
+    ;;
+  theme)
+    source $APPEARANCE_DIR/src/themes/set-theme.sh
+    $APPEARANCE_DIR/bin/theme.sh "$@"
+    ;;
+  preset)
+    $APPEARANCE_DIR/bin/preset.sh "$@"
+    ;;
+  help)
+    show_help
+    ;;
+  *)
+    echo "Error: Unknown command '$command'."
+    show_help
+    exit 1
+    ;;
+esac

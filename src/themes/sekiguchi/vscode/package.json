@@ -1,0 +1,22 @@
+{
+  "name": "sekiguchi-theme",
+  "displayName": "Sekiguchi Theme",
+  "description": "Sterile biotech-inspired light theme for VS Code.",
+  "version": "0.0.1",
+  "publisher": "ridhwaans",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Sekiguchi",
+        "uiTheme": "vs",
+        "path": "./themes/sekiguchi-color-theme.json"
+      }
+    ]
+  }
+}
