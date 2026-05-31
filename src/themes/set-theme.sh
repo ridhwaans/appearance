@@ -25,56 +25,53 @@ install_vscode_extension_path() {
 
 set_theme() {
   theme=$1
-  NVIM_LOCAL_PLUGIN_DIR=""
+  VIMPLUG_COLORSCHEME=""
   VIM_LOCAL_RUNTIME_DIR=""
   VSCODE_EXTENSION_PATH=""
   VSCODE_ICON_EXTENSION=""
-  VSCODE_ICON_THEME=""
+  VSCODE_ICON_THEME="material-icon-theme"
   VSCODE_COLOR_EXTENSION=""
   VSCODE_COLOR_THEME=""
   case "$theme" in
     gotham)
-      # nvim
-      NVIM_FILENAME="colorscheme.lua"
-      NVIM_COLORSCHEME="neogotham"
-
       # Windows Terminal
-      WT_FILENAME="terminal.json"
       WT_COLOR_SCHEME="Gotham"
 
       # Terminal.app
       TERM_FILENAME="Gotham.terminal"
 
-      # vim
-      VIMPLUG_COLORSCHEME="whatyouhide/vim-gotham"
-      VIM_COLORSCHEME="gotham"
-
       # VS Code
       VSCODE_ICON_EXTENSION="PKief.material-icon-theme"
-      VSCODE_ICON_THEME="material-icon-theme"
 
       VSCODE_COLOR_EXTENSION="alireza94.theme-gotham"
       VSCODE_COLOR_THEME="Gotham"
 
+      # vim
+      VIMPLUG_COLORSCHEME="whatyouhide/vim-gotham"
+      VIM_COLORSCHEME="gotham"
+
+      # nvim
+      NVIM_COLORSCHEME="neogotham"
+
       apply_theme
       ;;
     sekiguchi)
-      NVIM_FILENAME="colorscheme.lua"
-      NVIM_COLORSCHEME="sekiguchi"
-      NVIM_LOCAL_PLUGIN_DIR=$APPEARANCE_DIR/src/themes/$theme/sekiguchi.nvim
-
-      WT_FILENAME="terminal.json"
+      # Windows Terminal
       WT_COLOR_SCHEME="Sekiguchi"
 
+      # Terminal.app
       TERM_FILENAME="Sekiguchi.terminal"
 
-      VIMPLUG_COLORSCHEME=""
+      # VS Code
+      VSCODE_EXTENSION_PATH=$APPEARANCE_DIR/src/themes/$theme/vscode
+      VSCODE_COLOR_THEME="Sekiguchi"
+
+      # vim
       VIM_COLORSCHEME="sekiguchi"
       VIM_LOCAL_RUNTIME_DIR=$APPEARANCE_DIR/src/themes/$theme/vim
 
-      VSCODE_ICON_THEME="material-icon-theme"
-      VSCODE_COLOR_THEME="Sekiguchi"
-      VSCODE_EXTENSION_PATH=$APPEARANCE_DIR/src/themes/$theme/vscode
+      # nvim
+      NVIM_COLORSCHEME="sekiguchi"
 
       apply_theme
       ;;
@@ -110,9 +107,9 @@ apply_theme() {
       SETTINGS_FILE=$WINDOWS_TERMINAL_SETTINGS_DIR/settings.json
       echo $SETTINGS_FILE
 
-      echo $APPEARANCE_DIR/src/themes/$theme/$WT_FILENAME
+      echo $APPEARANCE_DIR/src/themes/$theme/terminal.json
       jq --arg color_scheme "$WT_COLOR_SCHEME" \
-      --slurpfile theme $APPEARANCE_DIR/src/themes/$theme/$WT_FILENAME \
+      --slurpfile theme $APPEARANCE_DIR/src/themes/$theme/terminal.json \
       '.schemes = [$theme[0]] | .profiles.list |= map(if .source == "Windows.Terminal.Wsl" then .colorScheme = $color_scheme else . end)' \
       $SETTINGS_FILE \
       > temp.json && mv temp.json $SETTINGS_FILE
@@ -223,6 +220,11 @@ EOD
   # Shell
 
   conditional_sed -i "s/^THEME_NAME=.*/THEME_NAME=\"$theme\"/" $XDG_CONFIG_HOME/zsh/.zshrc
+
+  SHELL_THEME_SCRIPT="$APPEARANCE_DIR/src/themes/$theme/theme.sh"
+  if [ -s "$SHELL_THEME_SCRIPT" ]; then
+    sh "$SHELL_THEME_SCRIPT"
+  fi
 
   # Prompt
 

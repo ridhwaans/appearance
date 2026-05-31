@@ -13,14 +13,14 @@ conditional_sed() {
 
 set_font() {
   local postscript_name=$1
-	local file=$2
-	local url=$3
+  local file=$2
+  local url=$3
   local family_name=${4:-"${file%.*}"}
   local terminal_face=${5:-"$family_name"}
-  base_name="${file%.*}"
-  FONT_SIZE="11"
+  local base_name="${file%.*}"
+  local font_size="11"
 
-  echo "postscript_name=$postscript_name, file=$file, base_name=$base_name, family_name=$family_name, terminal_face=$terminal_face, url=$url, FONT_SIZE=$FONT_SIZE"
+  echo "postscript_name=$postscript_name, file=$file, base_name=$base_name, family_name=$family_name, terminal_face=$terminal_face, url=$url, font_size=$font_size"
 
   # Install
 	if ! $(fc-list | grep -i "$base_name" >/dev/null); then
@@ -101,7 +101,7 @@ set_font() {
       jq --arg terminal_face "$terminal_face" '.profiles.list |= map(if .source == "Windows.Terminal.Wsl" then .font.face = $terminal_face else . end)' \
       $SETTINGS_FILE \
       > temp.json && mv temp.json $SETTINGS_FILE
-      echo "Updated Windows Terminal font to '$terminal_face' size $FONT_SIZE."
+      echo "Updated Windows Terminal font to '$terminal_face' size $font_size."
     fi
   fi
 
@@ -116,7 +116,7 @@ tell application "Terminal"
 
     -- Change the font name and size of the default profile
     set font name of defaultProfile to "$postscript_name"
-    set font size of defaultProfile to $FONT_SIZE
+    set font size of defaultProfile to $font_size
 end tell
 EOD
   fi
