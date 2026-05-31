@@ -9,9 +9,9 @@ $git_status\
 $character\
 """
 
-palette = "agnoster"
+palette = "gotham"
 
-[palettes.agnoster]
+[palettes.gotham]
 black = "#000000"
 blue = "#0000ee"
 cyan = "#00cdcd"

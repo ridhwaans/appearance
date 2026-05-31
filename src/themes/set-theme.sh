@@ -32,7 +32,7 @@ set_theme() {
   VSCODE_ICON_THEME=""
   VSCODE_COLOR_EXTENSION=""
   VSCODE_COLOR_THEME=""
-  PROMPT_THEME_NAME="agnoster"
+  PROMPT_THEME_NAME="starship"
   case "$theme" in
     gotham)
       # nvim
@@ -57,6 +57,7 @@ set_theme() {
       VSCODE_COLOR_EXTENSION="alireza94.theme-gotham"
       VSCODE_COLOR_THEME="Gotham"
 
+      PROMPT_THEME_NAME="starship"
       apply_theme
       ;;
     sekiguchi)
@@ -230,6 +231,10 @@ EOD
 
   conditional_sed -i "s/^PROMPT_THEME=.*/PROMPT_THEME=\"$PROMPT_THEME_NAME\"/" $XDG_CONFIG_HOME/zsh/.zshrc
 
+  if [ "$PROMPT_THEME_NAME" = "starship" ]; then
+    ln -sf "$APPEARANCE_DIR/src/themes/$theme/starship.toml" "$XDG_CONFIG_HOME/starship.toml"
+  fi
+
   # vim
 
   conditional_sed -i "s|^let g:vim_plug_colorscheme = \".*\"|let g:vim_plug_colorscheme = \"$VIMPLUG_COLORSCHEME\"|" $XDG_CONFIG_HOME/vim/vimrc
@@ -242,7 +247,7 @@ EOD
     cp -f "$VIM_LOCAL_RUNTIME_DIR/autoload/airline/themes/$VIM_COLORSCHEME.vim" "$XDG_CONFIG_HOME/vim/autoload/airline/themes/$VIM_COLORSCHEME.vim"
   fi
 
-  vim -u "$XDG_CONFIG_HOME/vim/vimrc" +silent! +PlugInstall +PlugClean +qall
+  vim -u "$XDG_CONFIG_HOME/vim/vimrc" +silent! +PlugInstall +PlugClean! +qall
 
   # nvim
 
