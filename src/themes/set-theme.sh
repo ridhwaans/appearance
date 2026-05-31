@@ -32,7 +32,6 @@ set_theme() {
   VSCODE_ICON_THEME=""
   VSCODE_COLOR_EXTENSION=""
   VSCODE_COLOR_THEME=""
-  PROMPT_THEME_NAME="starship"
   case "$theme" in
     gotham)
       # nvim
@@ -57,7 +56,6 @@ set_theme() {
       VSCODE_COLOR_EXTENSION="alireza94.theme-gotham"
       VSCODE_COLOR_THEME="Gotham"
 
-      PROMPT_THEME_NAME="starship"
       apply_theme
       ;;
     sekiguchi)
@@ -78,7 +76,6 @@ set_theme() {
       VSCODE_COLOR_THEME="Sekiguchi"
       VSCODE_EXTENSION_PATH=$APPEARANCE_DIR/src/themes/$theme/vscode
 
-      PROMPT_THEME_NAME="starship"
       apply_theme
       ;;
     *)
@@ -229,11 +226,7 @@ EOD
 
   # Prompt
 
-  conditional_sed -i "s/^PROMPT_THEME=.*/PROMPT_THEME=\"$PROMPT_THEME_NAME\"/" $XDG_CONFIG_HOME/zsh/.zshrc
-
-  if [ "$PROMPT_THEME_NAME" = "starship" ]; then
-    ln -sf "$APPEARANCE_DIR/src/themes/$theme/starship.toml" "$XDG_CONFIG_HOME/starship.toml"
-  fi
+  ln -sf "$APPEARANCE_DIR/src/themes/$theme/starship.toml" "$XDG_CONFIG_HOME/starship.toml"
 
   # vim
 
