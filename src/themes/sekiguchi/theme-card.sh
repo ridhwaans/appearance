@@ -89,19 +89,28 @@ color_chip() {
 print_color_grid() {
   local color
   local index=0
+  local terminal_cols="${COLUMNS:-}"
+  local grid_columns
+
+  if [[ ! "$terminal_cols" =~ ^[0-9]+$ ]]; then
+    terminal_cols="$(tput cols 2>/dev/null || printf '80')"
+  fi
+
+  grid_columns=$(((terminal_cols + 4) / 16))
+  (( grid_columns < 1 )) && grid_columns=1
 
   for color in "$@"; do
     printf '  '
     color_chip "$color"
     index=$((index + 1))
-    if (( index % 5 == 0 )); then
+    if (( index % grid_columns == 0 )); then
       printf '\n'
     else
       printf '    '
     fi
   done
 
-  if (( index % 5 != 0 )); then
+  if (( index % grid_columns != 0 )); then
     printf '\n'
   fi
 }
@@ -177,11 +186,10 @@ artifact_table() {
   printf '| %-31s | %-7s | %-34s |\n' "Target" "Status" "Path"
   printf '+---------------------------------+---------+------------------------------------+\n'
   artifact_row "Terminal escape theme" "theme.sh"
+  artifact_row "Windows Terminal scheme" "terminal.json"
   artifact_row "macOS Terminal profile" "Sekiguchi.terminal"
   artifact_row "Starship prompt" "starship.toml"
   artifact_row "Lazy.nvim loader" "colorscheme.lua"
-  artifact_row "Neovim entrypoint" "sekiguchi.nvim/colors/sekiguchi.lua"
-  artifact_row "Neovim implementation" "sekiguchi.nvim/lua/sekiguchi/init.lua"
   artifact_row "Classic Vim" "vim/colors/sekiguchi.vim"
   artifact_row "vim-airline" "vim/autoload/airline/themes/sekiguchi.vim"
   artifact_row "VS Code manifest" "vscode/package.json"
@@ -213,9 +221,9 @@ palette_panel() {
 palette_inventory() {
   section "Palette Inventory"
   palette_panel "Shell terminal" text "theme.sh"
+  palette_panel "Windows Terminal" text "terminal.json"
   palette_panel "macOS Terminal" terminal "Sekiguchi.terminal"
   palette_panel "Starship prompt" text "starship.toml"
-  palette_panel "Neovim" text "sekiguchi.nvim/lua/sekiguchi/init.lua"
   palette_panel "Vim" text "vim/colors/sekiguchi.vim"
   palette_panel "vim-airline" text "vim/autoload/airline/themes/sekiguchi.vim"
   palette_panel "VS Code" text "vscode/themes/sekiguchi-color-theme.json"
@@ -245,9 +253,9 @@ consistency_matrix() {
   printf '| %-22s | %-6s | %-7s | %-5s |\n' "Target" "Colors" "Missing" "Extra"
   printf '+------------------------+--------+---------+-------+\n'
   rows="$(
+    compare_palette "Windows Terminal" text "terminal.json"
     compare_palette "macOS Terminal" terminal "Sekiguchi.terminal"
     compare_palette "Starship prompt" text "starship.toml"
-    compare_palette "Neovim" text "sekiguchi.nvim/lua/sekiguchi/init.lua"
     compare_palette "Vim" text "vim/colors/sekiguchi.vim"
     compare_palette "vim-airline" text "vim/autoload/airline/themes/sekiguchi.vim"
     compare_palette "VS Code" text "vscode/themes/sekiguchi-color-theme.json"
@@ -263,6 +271,8 @@ detail_diff_panel() {
   local kind="$2"
   local path="$3"
   local terminal_palette current missing extra
+  local colors=()
+  local color
 
   terminal_palette="$(extract_text_colors "$theme_dir/theme.sh")"
   current="$(collect_colors "$kind" "$path")"
@@ -276,26 +286,30 @@ detail_diff_panel() {
     printf '  missing: none\n'
   else
     printf '  missing:\n'
+    colors=()
     while IFS= read -r color; do
-      [[ -n "$color" ]] && color_chip "$color" && printf '\n'
+      [[ -n "$color" ]] && colors+=("$color")
     done <<< "$missing"
+    print_color_grid "${colors[@]}"
   fi
 
   if [[ -z "$extra" ]]; then
     printf '  extra:   none\n'
   else
     printf '  extra:\n'
+    colors=()
     while IFS= read -r color; do
-      [[ -n "$color" ]] && color_chip "$color" && printf '\n'
+      [[ -n "$color" ]] && colors+=("$color")
     done <<< "$extra"
+    print_color_grid "${colors[@]}"
   fi
 }
 
 diff_details() {
   section "Diff Details"
+  detail_diff_panel "Windows Terminal" text "terminal.json"
   detail_diff_panel "macOS Terminal" terminal "Sekiguchi.terminal"
   detail_diff_panel "Starship prompt" text "starship.toml"
-  detail_diff_panel "Neovim" text "sekiguchi.nvim/lua/sekiguchi/init.lua"
   detail_diff_panel "Vim" text "vim/colors/sekiguchi.vim"
   detail_diff_panel "vim-airline" text "vim/autoload/airline/themes/sekiguchi.vim"
   detail_diff_panel "VS Code" text "vscode/themes/sekiguchi-color-theme.json"
@@ -304,7 +318,7 @@ diff_details() {
 notes_panel() {
   section "Notes"
   printf '  * theme.sh, Sekiguchi.terminal, and VS Code terminal ANSI colors should align.\n'
-  printf '  * Neovim reads colors from the bundled sekiguchi.nvim theme in this directory.\n'
+  printf '  * Neovim reads colors from the ridhwaans/sekiguchi.nvim Lazy plugin.\n'
   printf '  * Editor themes intentionally add UI colors for selections, diagnostics, borders, popups, and cursor lines.\n'
   printf '  * colorscheme.lua is a loader spec, not a palette source.\n'
   printf '  * vscode/package.json is extension metadata, not a palette source.\n'

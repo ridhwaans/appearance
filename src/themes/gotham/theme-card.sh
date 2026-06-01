@@ -90,19 +90,28 @@ color_chip() {
 print_color_grid() {
   local color
   local index=0
+  local terminal_cols="${COLUMNS:-}"
+  local grid_columns
+
+  if [[ ! "$terminal_cols" =~ ^[0-9]+$ ]]; then
+    terminal_cols="$(tput cols 2>/dev/null || printf '80')"
+  fi
+
+  grid_columns=$(((terminal_cols + 4) / 16))
+  (( grid_columns < 1 )) && grid_columns=1
 
   for color in "$@"; do
     printf '  '
     color_chip "$color"
     index=$((index + 1))
-    if (( index % 5 == 0 )); then
+    if (( index % grid_columns == 0 )); then
       printf '\n'
     else
       printf '    '
     fi
   done
 
-  if (( index % 5 != 0 )); then
+  if (( index % grid_columns != 0 )); then
     printf '\n'
   fi
 }
@@ -253,6 +262,8 @@ detail_diff_panel() {
   local kind="$2"
   local path="$3"
   local terminal_palette current missing extra
+  local colors=()
+  local color
 
   terminal_palette="$(extract_text_colors "$theme_dir/theme.sh")"
   current="$(collect_colors "$kind" "$path")"
@@ -266,18 +277,22 @@ detail_diff_panel() {
     printf '  missing: none\n'
   else
     printf '  missing:\n'
+    colors=()
     while IFS= read -r color; do
-      [[ -n "$color" ]] && color_chip "$color" && printf '\n'
+      [[ -n "$color" ]] && colors+=("$color")
     done <<< "$missing"
+    print_color_grid "${colors[@]}"
   fi
 
   if [[ -z "$extra" ]]; then
     printf '  extra:   none\n'
   else
     printf '  extra:\n'
+    colors=()
     while IFS= read -r color; do
-      [[ -n "$color" ]] && color_chip "$color" && printf '\n'
+      [[ -n "$color" ]] && colors+=("$color")
     done <<< "$extra"
+    print_color_grid "${colors[@]}"
   fi
 }
 

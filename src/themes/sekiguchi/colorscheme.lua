@@ -1,6 +1,6 @@
 return {
   {
-    dir = vim.env.APPEARANCE_DIR .. "/src/themes/sekiguchi/sekiguchi.nvim",
+    "ridhwaans/sekiguchi.nvim",
     lazy = false,
     priority = 1000,
     config = function()
