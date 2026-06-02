@@ -12,13 +12,13 @@ $character\
 palette = "gotham"
 
 [palettes.gotham]
-black = "#000000"
-blue = "#0000ee"
-cyan = "#00cdcd"
-green = "#00cd00"
-yellow = "#cdcd00"
-red = "#cd0000"
-white = "#e5e5e5"
+black = "#0a0f14"
+blue = "#195465"
+cyan = "#33859d"
+green = "#26a98b"
+yellow = "#edb54b"
+red = "#c33027"
+white = "#98d1ce"
 
 [status]
 disabled = false
