@@ -242,13 +242,15 @@ EOD
     cp -f "$VIM_LOCAL_RUNTIME_DIR/autoload/airline/themes/$VIM_COLORSCHEME.vim" "$XDG_CONFIG_HOME/vim/autoload/airline/themes/$VIM_COLORSCHEME.vim"
   fi
 
-  vim -u "$XDG_CONFIG_HOME/vim/vimrc" +silent! +PlugInstall +PlugClean! +qall
+  echo "Installing Vim plugins..."
+  vim --not-a-term -u "$XDG_CONFIG_HOME/vim/vimrc" -n "+PlugInstall --sync" "+PlugClean!" +qall
 
   # nvim
 
   NVIM_USER_PLUGINS_DIR=$XDG_CONFIG_HOME/nvim/lua/plugins
   mkdir -p $NVIM_USER_PLUGINS_DIR && cp -f $APPEARANCE_DIR/src/themes/$theme/colorscheme.lua $NVIM_USER_PLUGINS_DIR/colorscheme.lua
 
+  echo "Installing Neovim plugins..."
   nvim --headless "+Lazy! sync" +"colorscheme $NVIM_COLORSCHEME" +qa
 
 }
