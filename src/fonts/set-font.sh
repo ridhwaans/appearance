@@ -23,7 +23,7 @@ set_font() {
   echo "postscript_name=$postscript_name, file=$file, base_name=$base_name, family_name=$family_name, terminal_face=$terminal_face, url=$url, font_size=$font_size"
 
   # Install
-	if ! $(fc-list | grep -i "$base_name" >/dev/null); then
+	if ! fc-list | grep -Fqi "$file"; then
     if [ $(uname) = Darwin ]; then
       echo "(mac)"
 
@@ -111,14 +111,11 @@ set_font() {
 
 osascript <<EOD
 tell application "Terminal"
-    -- Get the default profile
     set defaultProfile to default settings
 
-    -- Change the font name and size of the default profile
     set font name of defaultProfile to "$postscript_name"
     set font size of defaultProfile to $font_size
 
-    -- Apply the font to already-open terminal tabs
     repeat with terminalWindow in windows
         repeat with terminalTab in tabs of terminalWindow
             set tabSettings to current settings of terminalTab
@@ -143,7 +140,7 @@ set_font_by_name() {
       set_font "SFMonoPowerline-Regular" "SF-Mono-Powerline-Regular.otf" "https://github.com/Twixes/SF-Mono-Powerline/blob/master/SF-Mono-Powerline-Regular.otf" "'SF Mono Powerline', Menlo, Monaco, 'Courier New', monospace" "SF Mono Powerline"
       ;;
     "Space Mono")
-      set_font "SpaceMono-Regular" "Space Mono.ttf" "https://github.com/google/fonts/raw/main/ofl/spacemono/SpaceMono-Regular.ttf" "'Space Mono', Menlo, Monaco, 'Courier New', monospace" "Space Mono"
+      set_font "SpaceMonoForPowerline-Regular" "Space Mono for Powerline.ttf" "https://github.com/powerline/fonts/raw/master/SpaceMono/Space%20Mono%20for%20Powerline.ttf" "'Space Mono for Powerline', Menlo, Monaco, 'Courier New', monospace" "Space Mono for Powerline"
       ;;
     *)
       echo "Error: Unknown font '$name'."
