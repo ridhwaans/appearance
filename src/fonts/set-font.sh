@@ -117,6 +117,16 @@ tell application "Terminal"
     -- Change the font name and size of the default profile
     set font name of defaultProfile to "$postscript_name"
     set font size of defaultProfile to $font_size
+
+    -- Apply the font to already-open terminal tabs
+    repeat with terminalWindow in windows
+        repeat with terminalTab in tabs of terminalWindow
+            set tabSettings to current settings of terminalTab
+            set font name of tabSettings to "$postscript_name"
+            set font size of tabSettings to $font_size
+            set current settings of terminalTab to tabSettings
+        end repeat
+    end repeat
 end tell
 EOD
   fi
