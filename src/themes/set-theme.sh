@@ -2,14 +2,8 @@
 
 set -e
 
-conditional_sed() {
-    # use gnu sed for no explicit backup in-place editing on mac
-    if [ $(uname) = Darwin ]; then
-        gsed "$@"
-    else
-        sed "$@"
-    fi
-}
+source "$APPEARANCE_DIR/src/_helper.sh"
+source "$APPEARANCE_DIR/src/themes/registry.sh"
 
 install_vscode_extension_path() {
   local extension_path=$1
@@ -25,61 +19,8 @@ install_vscode_extension_path() {
 
 set_theme() {
   theme=$1
-  VIMPLUG_COLORSCHEME=""
-  VIM_LOCAL_RUNTIME_DIR=""
-  VSCODE_EXTENSION_PATH=""
-  VSCODE_ICON_EXTENSION=""
-  VSCODE_ICON_THEME="material-icon-theme"
-  VSCODE_COLOR_EXTENSION=""
-  VSCODE_COLOR_THEME=""
-  case "$theme" in
-    gotham)
-      # Windows Terminal
-      WT_COLOR_SCHEME="Gotham"
-
-      # Terminal.app
-      TERM_FILENAME="Gotham.terminal"
-
-      # VS Code
-      VSCODE_ICON_EXTENSION="PKief.material-icon-theme"
-
-      VSCODE_COLOR_EXTENSION="alireza94.theme-gotham"
-      VSCODE_COLOR_THEME="Gotham"
-
-      # vim
-      VIMPLUG_COLORSCHEME="whatyouhide/vim-gotham"
-      VIM_COLORSCHEME="gotham"
-
-      # nvim
-      NVIM_COLORSCHEME="neogotham"
-
-      apply_theme
-      ;;
-    sekiguchi)
-      # Windows Terminal
-      WT_COLOR_SCHEME="Sekiguchi"
-
-      # Terminal.app
-      TERM_FILENAME="Sekiguchi.terminal"
-
-      # VS Code
-      VSCODE_EXTENSION_PATH=$APPEARANCE_DIR/src/themes/$theme/vscode
-      VSCODE_COLOR_THEME="Sekiguchi"
-
-      # vim
-      VIM_COLORSCHEME="sekiguchi"
-      VIM_LOCAL_RUNTIME_DIR=$APPEARANCE_DIR/src/themes/$theme/vim
-
-      # nvim
-      NVIM_COLORSCHEME="sekiguchi"
-
-      apply_theme
-      ;;
-    *)
-      echo "Error: Unknown theme '$theme'."
-      exit 1
-      ;;
-  esac
+  load_theme_registry "$theme"
+  apply_theme
 }
 
 apply_theme() {
@@ -204,7 +145,7 @@ EOD
       code --install-extension "$VSCODE_ICON_EXTENSION" >/dev/null
     fi
     if [ -n "$VSCODE_ICON_THEME" ]; then
-      conditional_sed -i "s/\"workbench.iconTheme\": \".*\"/\"workbench.iconTheme\": \"$VSCODE_ICON_THEME\"/g" "$VSCODE_USER_SETTINGS_DIR"/settings.json
+      set_vscode_setting "$VSCODE_USER_SETTINGS_DIR/settings.json" "workbench.iconTheme" "$VSCODE_ICON_THEME"
     fi
 
     if [ -n "$VSCODE_EXTENSION_PATH" ]; then
@@ -213,7 +154,7 @@ EOD
       code --install-extension "$VSCODE_COLOR_EXTENSION" >/dev/null
     fi
     if [ -n "$VSCODE_COLOR_THEME" ]; then
-      conditional_sed -i "s/\"workbench.colorTheme\": \".*\"/\"workbench.colorTheme\": \"$VSCODE_COLOR_THEME\"/g" "$VSCODE_USER_SETTINGS_DIR"/settings.json
+      set_vscode_setting "$VSCODE_USER_SETTINGS_DIR/settings.json" "workbench.colorTheme" "$VSCODE_COLOR_THEME"
     fi
   fi
 
@@ -257,5 +198,4 @@ EOD
 
 export -f set_theme
 export -f apply_theme
-export -f conditional_sed
 export -f install_vscode_extension_path

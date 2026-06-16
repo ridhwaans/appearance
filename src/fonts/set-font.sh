@@ -2,14 +2,7 @@
 
 set -e
 
-conditional_sed() {
-    # use gnu sed for no explicit backup in-place editing on mac
-    if [ $(uname) = Darwin ]; then
-        gsed "$@"
-    else
-        sed "$@"
-    fi
-}
+source "$APPEARANCE_DIR/src/_helper.sh"
 
 set_font() {
   local postscript_name=$1
@@ -74,8 +67,8 @@ set_font() {
     fi
 
     echo "$VSCODE_USER_SETTINGS_DIR"/settings.json
-    conditional_sed -i "s/\"editor.fontFamily\": \".*\"/\"editor.fontFamily\": \"$family_name\"/g" "$VSCODE_USER_SETTINGS_DIR"/settings.json
-    conditional_sed -i "s/\"terminal.integrated.fontFamily\": \".*\"/\"terminal.integrated.fontFamily\": \"$family_name\"/g" "$VSCODE_USER_SETTINGS_DIR"/settings.json
+    set_vscode_setting "$VSCODE_USER_SETTINGS_DIR/settings.json" "editor.fontFamily" "$family_name"
+    set_vscode_setting "$VSCODE_USER_SETTINGS_DIR/settings.json" "terminal.integrated.fontFamily" "$family_name"
   fi
 
   # Windows Terminal
@@ -151,4 +144,3 @@ set_font_by_name() {
 
 export -f set_font
 export -f set_font_by_name
-export -f conditional_sed

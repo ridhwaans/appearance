@@ -19,6 +19,7 @@ Commands:
   font                 Font management (use 'appearance font help' for details)
   theme                Theme management (use 'appearance theme help' for details)
   preset               Preset management (use 'appearance preset help' for details)
+  defaults             Apply the default preset
   help                 Show this help message
 EOF
 }
@@ -42,6 +43,9 @@ case "$command" in
     ;;
   preset)
     $APPEARANCE_DIR/bin/preset.sh "$@"
+    ;;
+  defaults)
+    $APPEARANCE_DIR/install.sh "$@"
     ;;
   help)
     show_help

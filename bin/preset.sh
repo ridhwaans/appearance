@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "$APPEARANCE_DIR/src/presets/registry.sh"
+
 preset_help() {
   cat <<EOF
 Usage: appearance preset [OPTIONS]
@@ -19,20 +21,9 @@ EOF
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -n|--name)
-      case "$2" in
-        gotham)
-          $APPEARANCE_DIR/bin/appearance theme --name gotham
-          $APPEARANCE_DIR/bin/appearance font --name "Roboto Mono"
-          ;;
-        sekiguchi)
-          $APPEARANCE_DIR/bin/appearance theme --name sekiguchi
-          $APPEARANCE_DIR/bin/appearance font --name "Space Mono"
-          ;;
-        *)
-          echo "Error: Unknown preset '$2'."
-          exit 1
-          ;;
-      esac
+      load_preset_registry "$2"
+      $APPEARANCE_DIR/bin/appearance theme --name "$PRESET_THEME"
+      $APPEARANCE_DIR/bin/appearance font --name "$PRESET_FONT"
       shift 2
       ;;
     help)
