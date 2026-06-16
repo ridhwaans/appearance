@@ -19,4 +19,9 @@ load_preset_registry() {
   esac
 }
 
+list_presets() {
+  printf '%s\n' gotham sekiguchi
+}
+
 export -f load_preset_registry
+export -f list_presets

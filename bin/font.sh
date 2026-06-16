@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
+source "$APPEARANCE_DIR/src/fonts/registry.sh"
+
 font_help() {
   cat <<EOF
 Usage: appearance font [OPTIONS]
 
 Fonts:
-  Roboto Mono
-  SF Mono
-  Space Mono
+$(list_fonts | sed 's/^/  /')
 
 Options:
   -n, --name     Specify the font name

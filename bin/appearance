@@ -3,7 +3,9 @@
 set -e
 
 APPEARANCE_DIR=${APPEARANCE_DIR:-$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)}
+DOTFILES_DIR=${DOTFILES_DIR:-$HOME/Source/dotfiles}
 export APPEARANCE_DIR
+export DOTFILES_DIR
 
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -19,6 +21,7 @@ Commands:
   font                 Font management (use 'appearance font help' for details)
   theme                Theme management (use 'appearance theme help' for details)
   preset               Preset management (use 'appearance preset help' for details)
+  card                 Theme system card (use 'appearance card help' for details)
   defaults             Apply the default preset
   help                 Show this help message
 EOF
@@ -43,6 +46,9 @@ case "$command" in
     ;;
   preset)
     $APPEARANCE_DIR/bin/preset.sh "$@"
+    ;;
+  card)
+    $APPEARANCE_DIR/bin/card.sh "$@"
     ;;
   defaults)
     $APPEARANCE_DIR/install.sh "$@"

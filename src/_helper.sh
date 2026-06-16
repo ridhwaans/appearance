@@ -13,16 +13,11 @@ set_vscode_setting() {
   local settings_file=$1
   local key=$2
   local value=$3
-  local escaped_value
-
-  escaped_value=${value//\\/\\\\}
-  escaped_value=${escaped_value//&/\\&}
-  escaped_value=${escaped_value//|/\\|}
 
   if grep -q "\"$key\":" "$settings_file"; then
-    conditional_sed -i "s|\"$key\": \".*\"|\"$key\": \"$escaped_value\"|g" "$settings_file"
+    conditional_sed -i "s|\"$key\": \".*\"|\"$key\": \"$value\"|g" "$settings_file"
   else
-    conditional_sed -i "0,/{/s|{|{\n\t\"$key\": \"$escaped_value\",|" "$settings_file"
+    conditional_sed -i "0,/{/s|{|{\n\t\"$key\": \"$value\",|" "$settings_file"
   fi
 }
 

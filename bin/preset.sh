@@ -7,8 +7,7 @@ preset_help() {
 Usage: appearance preset [OPTIONS]
 
 Presets:
-  gotham
-  sekiguchi
+$(list_presets | sed 's/^/  /')
 
 Options:
   -n, --name     Specify the preset name

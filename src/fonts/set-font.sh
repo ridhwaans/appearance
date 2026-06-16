@@ -3,6 +3,7 @@
 set -e
 
 source "$APPEARANCE_DIR/src/_helper.sh"
+source "$APPEARANCE_DIR/src/fonts/registry.sh"
 
 set_font() {
   local postscript_name=$1

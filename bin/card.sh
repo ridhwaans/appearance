@@ -2,9 +2,9 @@
 
 source "$APPEARANCE_DIR/src/themes/registry.sh"
 
-theme_help() {
+card_help() {
   cat <<EOF
-Usage: appearance theme [OPTIONS]
+Usage: appearance card [OPTIONS]
 
 Themes:
 $(list_themes | sed 's/^/  /')
@@ -16,7 +16,7 @@ EOF
 }
 
 if [[ "$#" -lt 1 ]]; then
-  theme_help
+  card_help
   exit 1
 fi
 
@@ -24,7 +24,8 @@ while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -n|--name)
       if [[ -n "$2" && ! "$2" =~ ^- ]]; then
-        set_theme "$2"
+        load_theme_registry "$2"
+        "$APPEARANCE_DIR/src/themes/$2/theme-card.sh"
         shift 2
       else
         echo "Error: Missing value for --name"
@@ -32,7 +33,7 @@ while [[ "$#" -gt 0 ]]; do
       fi
       ;;
     help)
-      theme_help
+      card_help
       exit 0
       ;;
     -*|--*)

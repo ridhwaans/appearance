@@ -38,4 +38,9 @@ load_theme_registry() {
   esac
 }
 
+list_themes() {
+  printf '%s\n' gotham sekiguchi
+}
+
 export -f load_theme_registry
+export -f list_themes
